@@ -330,6 +330,7 @@ koType (IOPorts {}) = IOPorts_T
 koType (IODevice {}) = IODevice_T
 koType (IOPT {}) = IOPT_T
 koType (VCPU {}) = VCPU_T
+koType (SC {}) = SC_T
 
 objAt :: (KernelObject Word -> Bool) -> ObjID -> Model Word -> Bool
 objAt p ref = maybe False p . maybeObject ref
@@ -355,6 +356,8 @@ capTyp (IOPortsCap {}) = IOPorts_T
 capTyp (IOSpaceCap {}) = IODevice_T
 capTyp (IOPTCap {}) = IOPT_T
 capTyp (VCPUCap {}) = VCPU_T
+capTyp (SCCap {}) = SC_T
+capTyp SchedControlCap = CNode_T
 
 checkTypAt :: Cap -> Model Word -> ObjID -> Word -> Logger Bool
 checkTypAt cap m contID slot = do
@@ -379,7 +382,8 @@ validCapArch _ (FrameCap {}) = True
 validCapArch _ (PTCap {}) = True
 validCapArch _ (PDCap {}) = True
 validCapArch _ (ASIDPoolCap {}) = True
-validCapArch _ ASIDControlCap = True
+validCapArch _ (SCCap {}) = True
+validCapArch _ SchedControlCap = True
 validCapArch IA32 (IOPortsCap {}) = True
 validCapArch IA32 IOSpaceMasterCap = True
 validCapArch IA32 (IOSpaceCap {}) = True
@@ -418,6 +422,7 @@ validObjArch _ (ASIDPool {}) = True
 validObjArch _ (PD {}) = True
 validObjArch _ (PT {}) = True
 validObjArch _ (Frame {}) = True
+validObjArch _ (SC {}) = True
 validObjArch IA32 (IOPorts {}) = True
 validObjArch IA32 (IODevice {}) = True
 validObjArch IA32 (IOPT {}) = True
